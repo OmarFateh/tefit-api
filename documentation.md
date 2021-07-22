@@ -72,7 +72,7 @@ Allows you to create a new post. Requires authentication.
 
 Request Data:
 
- - `title` - String - maxLength: 200 - minLength: 1 - Required
+ - `title` - String - maxLength: 200 - Required
  - `overview` - String - Required
  - `thumbnail` - imagefile - Required
  - `category` - Integer - categoryId - Required
@@ -87,7 +87,7 @@ Update an existing post. Requires authentication.
 
 Request Data:
 
- - `title` - String - maxLength: 200 - minLength: 1 - Required
+ - `title` - String - maxLength: 200 - Required
  - `overview` - String - Required
  - `thumbnail` - imagefile - Required
  - `category` - Integer - categoryId - Required
@@ -99,3 +99,77 @@ Request Data:
 DELETE `api/blog/posts/:postSlug/`
 
 Delete an existing post. Requires authentication.
+
+## API Authentication ##
+
+To create, update, or delete a category or post, you need to login your API client.
+
+### Token ###
+
+POST `/api/users/token/`
+
+Return access and refresh tokens.
+
+Request Data:
+
+ - `username` - String - Required
+ - `password` - String - Required
+
+### Register ###
+
+POST `/api/users/register/`
+
+Allows you to create a new user. Requires authentication.
+
+Request Data:
+
+ - `username` - String - maxLength: 150 - 150 characters or fewer. Letters, digits and @/./+/-/_ only - Required
+ - `first_name` - String - maxLength: 30 - Required
+ - `last_name` - String - maxLength: 150 - Required
+ - `email` - String - Required
+ - `email2` - String - Required
+ - `password` - String - maxLength: 128 - Required
+ - `password2` - String - Required
+
+### Change Password ###
+
+PATCH `/api/users/password/change/`
+
+Allows you to change a user's password. Requires authentication.
+
+Request Data:
+
+ - `old_password` - String - Required
+ - `new_password1` - String - Required
+ - `new_password2` - String - Required
+
+### Reset Password Email ###
+
+POST `/api/users/password/reset/`
+
+Send email to user's email with reset password link.
+
+Request Data:
+
+ - `email` - String - Required
+
+### Reset Password Token ###
+
+GET `/api/users/password/reset/:uidb64/:token/`
+
+Check if the reset password link is valid, and return uidb64 and token.
+
+The response body will contain the uidb64 and token.
+
+### Reset Password Form ###
+
+PATCH `/api/users/password/reset/complete/`
+
+Allows you to reset a user's password.
+
+Request Data:
+
+ - `new_password1` - String - Required
+ - `new_password2` - String - Required
+ - `token` - String - Required
+ - `uidb64` - String - Required
