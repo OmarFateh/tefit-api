@@ -8,7 +8,8 @@ from rest_framework.parsers import MultiPartParser, FormParser
 
 from .models import Category, Post
 from .permissions import IsOwnerOrReadOnly
-from .serializers import CategorySerializer, PostListSerializer, PostCreateSerializer, PostDetailSerializer
+from .serializers import (CategorySerializer, CategoryListSerializer, PostListSerializer,
+                          PostCreateSerializer, PostDetailSerializer)
 
 
 ##
@@ -18,7 +19,7 @@ class CategoryListAPIView(generics.ListAPIView):
     """
     Display a list of categories.
     """
-    serializer_class = CategorySerializer
+    serializer_class = CategoryListSerializer
     queryset = Category.objects.all()
 
 
@@ -88,8 +89,7 @@ class PostCreateAPIView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         """
-        Override the perform create function and let the post owner be the requested user,
-        and the post be the current post before saving. 
+        Override the perform create function and let the post owner be the requested user.
         """
         serializer.save(author=self.request.user)
 
