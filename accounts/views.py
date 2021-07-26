@@ -7,20 +7,14 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.models import User
 
-from .permissions import AnonPermissionOnly
-from .serializers import (
-    UserCreateSerializer,
-    UserLoginSerializer,
-    UserLogoutSerializer,
-    PassowordChangeSerializer,
-    PasswordResetEmailSerializer,
-    PasswordResetSerializer,
-)
-
 from rest_framework import generics, mixins, permissions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+
+from .permissions import AnonPermissionOnly
+from .serializers import (UserCreateSerializer, UserLoginSerializer, UserLogoutSerializer,
+                          PassowordChangeSerializer, PasswordResetEmailSerializer, PasswordResetSerializer)
 
 
 class UserRegisterAPIView(generics.CreateAPIView):
@@ -59,17 +53,6 @@ class UserLogoutAPIView(APIView):
     User logout API view.
     """
     permission_classes = [permissions.IsAuthenticated]
-    # serializer_class = UserLogoutSerializer
-
-    # def post(self, request, *args, **kwargs):
-    #     """
-    #     Override the post method and login user.
-    #     """
-    #     serializer = UserLogoutSerializer(data=request.data, context={
-    #         "request": self.request})
-    #     if serializer.is_valid(raise_exception=True):
-    #         return Response("{'success':'You are logged out successfully.}", status=status.HTTP_204_NO_CONTENT)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request, *args, **kwargs):
         """

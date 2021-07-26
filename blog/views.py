@@ -57,9 +57,7 @@ class CategoryUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
     def get_object(self, *args, **kwargs):
         # get category slug from the requested url.
         category_slug = self.kwargs.get("slug", None)
-        # get the category object by slug.
         obj = get_object_or_404(Category, slug=category_slug)
-        # check object permissions.
         self.check_object_permissions(self.request, obj)
         return obj
 
@@ -87,11 +85,11 @@ class PostCreateAPIView(generics.CreateAPIView):
     def get_serializer_context(self, *args, **kwargs):
         return {"request": self.request}
 
-    def perform_create(self, serializer):
-        """
-        Override the perform create function and let the post owner be the requested user.
-        """
-        serializer.save(author=self.request.user)
+    # def perform_create(self, serializer):
+    #     """
+    #     Override the perform create function and let the post owner be the requested user.
+    #     """
+    #     serializer.save(author=self.request.user)
 
 
 class PostDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -99,7 +97,7 @@ class PostDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
     Post detail update delete API view. 
     Only the owner of the post can update or delete it, otherwise it will be displayed only.
     """
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     parser_classes = [MultiPartParser, FormParser]
     queryset = Post.objects.select_related('category')
     serializer_class = PostDetailSerializer
@@ -110,9 +108,7 @@ class PostDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
     def get_object(self, *args, **kwargs):
         # get post slug from the requested url.
         post_slug = self.kwargs.get("slug", None)
-        # get the post object by slug.
         obj = get_object_or_404(Post, slug=post_slug)
-        # check object permissions.
         self.check_object_permissions(self.request, obj)
         return obj
 

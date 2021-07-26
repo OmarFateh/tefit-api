@@ -68,12 +68,12 @@ class UserCreateSerializer(serializers.ModelSerializer):
         Create and return a new user.
         """
         username = validated_data['username']
+        first_name = validated_data['first_name']
+        last_name = validated_data['last_name']
         email = validated_data['email']
         password = validated_data['password']
-        user_obj = User(
-            username=username,
-            email=email
-        )
+        user_obj = User(username=username, first_name=first_name,
+                        last_name=last_name, email=email)
         user_obj.set_password(password)
         user_obj.save()
         return validated_data

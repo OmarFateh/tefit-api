@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 
+from django_resized import ResizedImageField
 from ckeditor.fields import RichTextField
 
 
@@ -60,14 +61,15 @@ class Post(BaseTimestamp):
         ('published', 'Published'),
     )
 
-    author = models.ForeignKey(
-        User, related_name='posts', on_delete=models.CASCADE)
+    # author = models.ForeignKey(
+    #     User, related_name='posts', on_delete=models.CASCADE)
     category = models.ForeignKey(
         Category, related_name='posts', on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=200)
     overview = models.TextField()
     slug = models.SlugField(unique=True, null=True, blank=True)
     thumbnail = models.ImageField(upload_to=post_image)
+    # thumbnail = ResizedImageField(size=[750, 530], upload_to=post_image)
     content = RichTextField()
     views_count = models.IntegerField(default=0)
     read_time = models.PositiveIntegerField(default=1)

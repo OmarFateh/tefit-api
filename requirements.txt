@@ -12,6 +12,7 @@ Django==2.2.19
 django-ckeditor==6.1.0
 django-cors-headers==3.7.0
 django-js-asset==1.2.2
+django-resized==0.3.11
 djangorestframework==3.12.4
 djangorestframework-simplejwt==4.7.2
 drf-yasg==1.20.0
