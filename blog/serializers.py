@@ -54,21 +54,19 @@ class PostCreateSerializer(serializers.ModelSerializer, PostReadTimeViewCountMix
     Post create serializer.
     """
     category = CategorySerializer(read_only=True)
+    category_id = serializers.IntegerField(min_value=1)
 
     class Meta:
         model = Post
-        fields = ['title', 'overview', 'thumbnail', 'category', 'content', 'status',
+        fields = ['title', 'overview', 'thumbnail', 'category', 'category_id', 'content', 'status',
                   'views_count', 'read_time', 'updated_at', 'created_at', 'timesince']
+        extra_kwargs = {"category_id": {'write_only': True}}
 
     def create(self, validated_data):
         """
         Create and return a new post.
         """
-        request = self.context['request']
-        category_id = request.data.get('category')
-        if category_id is None or not isinstance(int(category_id), int):
-            raise serializers.ValidationError(
-                {'category': ['This field is invalid.']})
+        category_id = validated_data.get('category_id')
         category_instance = get_object_or_404(Category, id=category_id)
         return Post.objects.create(category=category_instance, **validated_data)
 
@@ -78,21 +76,17 @@ class PostDetailSerializer(serializers.ModelSerializer, PostReadTimeViewCountMix
     Post detail serializer.
     """
     category = CategorySerializer(read_only=True)
+    category_id = serializers.IntegerField(min_value=1)
 
     class Meta:
         model = Post
-        fields = ['id', 'title', 'slug', 'thumbnail', 'category', 'content', 'views_count', 'read_time',
-                  'status', 'updated_at', 'created_at', 'timesince']
+        fields = ['id', 'title', 'slug', 'thumbnail', 'overview', 'category', 'category_id', 'content',
+                  'views_count', 'read_time', 'status', 'updated_at', 'created_at', 'timesince']
         read_only_fields = ['id', 'slug']
 
     def update(self, instance, validated_data):
-        request = self.context['request']
-        category_id = request.data.get('category')
-        if category_id:
-            if not isinstance(int(category_id), int):
-                raise serializers.ValidationError(
-                    {'category': ['This field is invalid.']})
-            category_instance = get_object_or_404(Category, id=category_id)
-            instance.category = category_instance
-            instance.save()
+        category_id = validated_data.get('category_id')
+        category_instance = get_object_or_404(Category, id=category_id)
+        instance.category = category_instance
+        instance.save()
         return super().update(instance, validated_data)
